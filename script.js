@@ -44,13 +44,21 @@ showTask();
 inputBox.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         addTask();
-    } else if (e.key === "Shift" || e.key === "0") {
-        tasks = [];
-        saveTasks();
-        renderTasks();
-    } else if (e.key === "-") {
-        tasks.pop();
-        saveTasks();
-        renderTasks();
     }
-});
+})
+
+inputBox.addEventListener("keydown", (e) => {
+    if (e.key === "Shift" || e.key === "0") {
+        listContainer.innerHTML = "";
+    }
+})
+
+inputBox.addEventListener("keydown", (e) => { 
+    if (e.key === "-") {
+        let lastTask = listContainer.lastElementChild;
+        if (lastTask){
+            lastTask.remove();
+            saveTask();
+        }
+    }
+})
