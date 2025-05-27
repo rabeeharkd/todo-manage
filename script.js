@@ -23,14 +23,40 @@ function addTask() {
 
 listContainer.addEventListener("click", (e) => {
     if (e.target.tagName === "LI") {
-        e.target.classList.toggle("checked")
+        e.target.classList.toggle("checked");
         saveTask();
-    }
-    else if (e.target.tagName === "SPAN") {
+    } else if (e.target.tagName === "SPAN") {
         e.target.parentElement.remove();
         saveTask();
     }
-})
+});
+
+// ✏️ Add this new event for double-click to edit
+listContainer.addEventListener("dblclick", (e) => {
+    if (e.target.tagName === "LI") {
+        const li = e.target;
+        const oldText = li.textContent.replace("×", "").trim();
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = oldText;
+        input.className = "edit-input";
+        li.innerHTML = "";
+        li.appendChild(input);
+        input.focus();
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                li.innerHTML = input.value + `<span>\u00d7</span>`;
+                saveTask();
+            }
+        });
+
+        input.addEventListener("blur", () => {
+            li.innerHTML = input.value + `<span>\u00d7</span>`;
+            saveTask();
+        });
+    }
+});
 
 function saveTask() {
     localStorage.setItem("data", listContainer.innerHTML)
@@ -49,6 +75,7 @@ inputBox.addEventListener("keydown", (e) => {
 
 inputBox.addEventListener("keydown", (e) => {
     if (e.key === "Shift" || e.key === "0") {
+        localStorage.removeItem("data");
         listContainer.innerHTML = "";
     }
 })
